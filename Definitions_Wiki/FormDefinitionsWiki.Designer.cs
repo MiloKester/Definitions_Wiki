@@ -58,9 +58,9 @@
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStripLabel,
             this.statusStripResponse});
-            this.statusStrip.Location = new System.Drawing.Point(0, 311);
+            this.statusStrip.Location = new System.Drawing.Point(0, 313);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(416, 22);
+            this.statusStrip.Size = new System.Drawing.Size(509, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -106,7 +106,7 @@
             // 
             this.TextBoxName.Location = new System.Drawing.Point(9, 60);
             this.TextBoxName.Name = "TextBoxName";
-            this.TextBoxName.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxName.Size = new System.Drawing.Size(124, 20);
             this.TextBoxName.TabIndex = 4;
             this.toolTip.SetToolTip(this.TextBoxName, "Double Click to clear all fields");
             this.TextBoxName.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxName_MouseDoubleClick);
@@ -115,19 +115,19 @@
             // 
             this.TextBoxCategory.Location = new System.Drawing.Point(9, 99);
             this.TextBoxCategory.Name = "TextBoxCategory";
-            this.TextBoxCategory.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxCategory.Size = new System.Drawing.Size(124, 20);
             this.TextBoxCategory.TabIndex = 5;
             // 
             // TextBoxStructure
             // 
             this.TextBoxStructure.Location = new System.Drawing.Point(9, 138);
             this.TextBoxStructure.Name = "TextBoxStructure";
-            this.TextBoxStructure.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxStructure.Size = new System.Drawing.Size(124, 20);
             this.TextBoxStructure.TabIndex = 6;
             // 
             // ButtonAdd
             // 
-            this.ButtonAdd.Location = new System.Drawing.Point(117, 117);
+            this.ButtonAdd.Location = new System.Drawing.Point(139, 117);
             this.ButtonAdd.Name = "ButtonAdd";
             this.ButtonAdd.Size = new System.Drawing.Size(100, 23);
             this.ButtonAdd.TabIndex = 7;
@@ -137,7 +137,7 @@
             // 
             // ButtonEdit
             // 
-            this.ButtonEdit.Location = new System.Drawing.Point(117, 89);
+            this.ButtonEdit.Location = new System.Drawing.Point(139, 89);
             this.ButtonEdit.Name = "ButtonEdit";
             this.ButtonEdit.Size = new System.Drawing.Size(100, 23);
             this.ButtonEdit.TabIndex = 8;
@@ -147,7 +147,7 @@
             // 
             // ButtonDelete
             // 
-            this.ButtonDelete.Location = new System.Drawing.Point(117, 146);
+            this.ButtonDelete.Location = new System.Drawing.Point(139, 146);
             this.ButtonDelete.Name = "ButtonDelete";
             this.ButtonDelete.Size = new System.Drawing.Size(100, 23);
             this.ButtonDelete.TabIndex = 9;
@@ -167,7 +167,7 @@
             // 
             // ButtonSearchByName
             // 
-            this.ButtonSearchByName.Location = new System.Drawing.Point(117, 60);
+            this.ButtonSearchByName.Location = new System.Drawing.Point(139, 60);
             this.ButtonSearchByName.Name = "ButtonSearchByName";
             this.ButtonSearchByName.Size = new System.Drawing.Size(100, 23);
             this.ButtonSearchByName.TabIndex = 11;
@@ -180,7 +180,7 @@
             this.TextBoxDefinition.Location = new System.Drawing.Point(9, 177);
             this.TextBoxDefinition.Multiline = true;
             this.TextBoxDefinition.Name = "TextBoxDefinition";
-            this.TextBoxDefinition.Size = new System.Drawing.Size(208, 122);
+            this.TextBoxDefinition.Size = new System.Drawing.Size(230, 122);
             this.TextBoxDefinition.TabIndex = 13;
             // 
             // label4
@@ -194,7 +194,7 @@
             // 
             // ButtonLoad
             // 
-            this.ButtonLoad.Location = new System.Drawing.Point(9, 12);
+            this.ButtonLoad.Location = new System.Drawing.Point(12, 12);
             this.ButtonLoad.Name = "ButtonLoad";
             this.ButtonLoad.Size = new System.Drawing.Size(99, 23);
             this.ButtonLoad.TabIndex = 19;
@@ -208,9 +208,9 @@
             this.columnHeader1,
             this.columnHeader2});
             this.ListViewDisplay.HideSelection = false;
-            this.ListViewDisplay.Location = new System.Drawing.Point(223, 60);
+            this.ListViewDisplay.Location = new System.Drawing.Point(245, 60);
             this.ListViewDisplay.Name = "ListViewDisplay";
-            this.ListViewDisplay.Size = new System.Drawing.Size(174, 239);
+            this.ListViewDisplay.Size = new System.Drawing.Size(249, 239);
             this.ListViewDisplay.TabIndex = 20;
             this.ListViewDisplay.UseCompatibleStateImageBehavior = false;
             this.ListViewDisplay.View = System.Windows.Forms.View.Details;
@@ -219,7 +219,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 71;
+            this.columnHeader1.Width = 150;
             // 
             // columnHeader2
             // 
@@ -230,7 +230,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 333);
+            this.ClientSize = new System.Drawing.Size(509, 335);
             this.Controls.Add(this.ListViewDisplay);
             this.Controls.Add(this.ButtonLoad);
             this.Controls.Add(this.label4);
@@ -248,7 +248,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.statusStrip);
             this.Name = "FormDefinitionsWiki";
-            this.Text = "Form1";
+            this.Text = "Definitions Wiki";
             this.Load += new System.EventHandler(this.FormDefinitionsWiki_Load);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
