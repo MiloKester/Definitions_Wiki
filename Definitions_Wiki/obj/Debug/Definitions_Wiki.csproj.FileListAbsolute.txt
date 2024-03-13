@@ -1,0 +1,20 @@
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.exe.config
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.exe
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.pdb
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.AssemblyReference.cache
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.Properties.Resources.resources
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.GenerateResource.cache
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.CoreCompileInputs.cache
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.exe
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.pdb
+C:\Users\30063179\source\repos\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.FormDefinitionsWiki.resources
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.exe.config
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.exe
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\bin\Debug\Definitions_Wiki.pdb
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.AssemblyReference.cache
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.FormDefinitionsWiki.resources
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.Properties.Resources.resources
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.GenerateResource.cache
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.csproj.CoreCompileInputs.cache
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.exe
+D:\[01] Work\Cert IV - Programming\Semester 2\Monday\Definitions_Wiki\Definitions_Wiki\obj\Debug\Definitions_Wiki.pdb

@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+
+// Milo Kester 30063179
+// 2024-03-13
+// Definitions Wiki
+// AT1 - Develop a fully functional wiki application
 
 namespace Definitions_Wiki
 {
     public partial class FormDefinitionsWiki : Form
     {
-        // write definitions
-        // search: make sentence case not matter and find regardless
-        // duplicate error handling not required
-
-        // BUGS
-        // cannot add new entries to a loaded file without crashing: index was outside the bounds of the array
-
         #region SetUp
 
         // 9.1 Create a global 2D string array, use static variable for the dimensions (row = 12, column = 4)
@@ -22,7 +20,7 @@ namespace Definitions_Wiki
         static int columnSize = 4; // name, category, structure, definition
         string[,] definitionsArray = new string[rowSize, columnSize];
         int ptr = 0; // points to next empty row
-        // int counter = 0; // used once later on for adding content
+        TextInfo myTI = new CultureInfo("en-AU", false).TextInfo; // for making text title case
 
         public FormDefinitionsWiki()
         {
@@ -31,6 +29,7 @@ namespace Definitions_Wiki
 
         private void FormDefinitionsWiki_Load(object sender, EventArgs e)
         {
+            // initalise, display, and sort
             InitialiseArray();
             DisplayArray();
             Sort();
@@ -38,14 +37,13 @@ namespace Definitions_Wiki
 
         private void InitialiseArray()
         {
-            //Random rnd = new Random();
+            // for loop through array on itialisation and fill with placeholders
             for (int i = 0; i < rowSize; i++)
             {
-                //rnd.Next(10, 99).ToString()
-                definitionsArray[i, 0] = "";
-                definitionsArray[i, 1] = "";
-                definitionsArray[i, 2] = "";
-                definitionsArray[i, 3] = "";
+                definitionsArray[i, 0] = "~";
+                definitionsArray[i, 1] = "~";
+                definitionsArray[i, 2] = "~";
+                definitionsArray[i, 3] = "~";
             }
         }
 
@@ -56,8 +54,9 @@ namespace Definitions_Wiki
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
         private void DisplayArray()
         {
-            ListViewDisplay.Items.Clear();
-            for (int i = 0; i < rowSize; i++)
+
+            ListViewDisplay.Items.Clear(); // clear display of everything
+            for (int i = 0; i < rowSize; i++) // loop through entire array
             {
                 ListViewItem item = new ListViewItem(definitionsArray[i, 0]); // name
                 item.SubItems.Add(definitionsArray[i, 1]); // category
@@ -68,15 +67,22 @@ namespace Definitions_Wiki
         // 9.9	Create a method so the user can select a definition (Name) from the ListView and all the information is displayed in the appropriate Textboxes
         private void ListViewDisplay_MouseClick(object sender, MouseEventArgs e)
         {
-            // try catch 
-            int currentIndex = ListViewDisplay.SelectedIndices[0];
-            if (currentIndex > -1)
-            {
-                TextBoxName.Text = definitionsArray[currentIndex, 0];
-                TextBoxCategory.Text = definitionsArray[currentIndex, 1];
-                TextBoxStructure.Text = definitionsArray[currentIndex, 2];
-                TextBoxDefinition.Text = definitionsArray[currentIndex, 3];
+            int currentIndex = ListViewDisplay.SelectedIndices[0]; // get current index from mouse click
+            try {
+                if (currentIndex > -1) // if valid index
+                {
+                    // display in boxes
+                    TextBoxName.Text = definitionsArray[currentIndex, 0]; // 2nd index is for different columns (name, category, structure, definition)
+                    TextBoxCategory.Text = definitionsArray[currentIndex, 1];
+                    TextBoxStructure.Text = definitionsArray[currentIndex, 2];
+                    TextBoxDefinition.Text = definitionsArray[currentIndex, 3];
+                }
             }
+            catch
+            {
+                statusStripResponse.Text = "Error";
+            }
+            
         }
 
         #endregion
@@ -87,11 +93,12 @@ namespace Definitions_Wiki
         // ensure you use a separate swap method that passes the array element to be swapped (do not use any built-in array methods)
         private void Sort()
         {
+            // loop through entire array
             for (int i = 0; i < rowSize; i++)
             {
                 for (int j = 0; j < rowSize - 1; j++)
                 {
-                    if (string.Compare(definitionsArray[j + 1, 0], definitionsArray[j, 0]) < 0)
+                    if (string.CompareOrdinal(definitionsArray[j + 1, 0], definitionsArray[j, 0]) < 0)
                     {
                         Swap(j);
                     }
@@ -103,12 +110,12 @@ namespace Definitions_Wiki
 
         private void Swap(int indx)
         {
-            string temp;
-            for (int x = 0; x < columnSize; x++)
+            string temp; // temporary string to swap to
+            for (int x = 0; x < columnSize; x++) // for loop to get all columns
             {
-                temp = definitionsArray[indx, x];
-                definitionsArray[indx, x] = definitionsArray[indx + 1, x];
-                definitionsArray[indx + 1, x] = temp;
+                temp = definitionsArray[indx, x]; // put row into temporary
+                definitionsArray[indx, x] = definitionsArray[indx + 1, x]; // swap row into new row
+                definitionsArray[indx + 1, x] = temp; // put temporary back into row
             }
         }
 
@@ -116,56 +123,46 @@ namespace Definitions_Wiki
         // add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         private void ButtonSearchByName_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(TextBoxName.Text))
+            int minIndx = 0;
+            int maxIndx = rowSize - 1;
+            int midIndx = 0;
+            bool flag = false; // true if found
+
+            string capitalText = myTI.ToTitleCase(TextBoxName.Text); // make search title case to match
+
+            while (!flag && minIndx <= maxIndx)
             {
-                int startIndx = -1;
-                int finalIndx = rowSize;
-                int foundIndx = -1;
-                bool flag = false;
-
-                while (!flag && !((finalIndx - startIndx) <= 1))
+                midIndx = (minIndx + maxIndx) / 2;
+                int compareVal = string.Compare(definitionsArray[midIndx, 0], capitalText);
+                
+                if (compareVal == 0) // match
                 {
-                    int newIndx = (finalIndx + startIndx) / 2;
-                    if (string.Compare(definitionsArray[newIndx, 0], TextBoxName.Text) == 0)
-                    {
-                        foundIndx = newIndx;
-                        flag = true;
-                        break;
-                    }
-                    else
-                    {
-                        if (string.Compare(definitionsArray[newIndx, 0], TextBoxName.Text) == 1)
-                        {
-                            finalIndx = newIndx;
-                        }
-                        else
-                        {
-                            startIndx = newIndx;
-                        }
-                    }
+                    flag = true;
+                    break;
                 }
-                if (flag)
+                else if (definitionsArray[midIndx, 0] == "~" || compareVal == 1) // search term is smaller than found
                 {
-                    TextBoxName.Text = definitionsArray[foundIndx, 0];
-                    TextBoxCategory.Text = definitionsArray[foundIndx, 1];
-                    TextBoxStructure.Text = definitionsArray[foundIndx, 2];
-                    TextBoxDefinition.Text = definitionsArray[foundIndx, 3];
-
-                    ListViewDisplay.SelectedItems.Clear();
-                    ListViewDisplay.Items[foundIndx].Selected = true;
-                    ListViewDisplay.Select();
-
-                    statusStripResponse.Text = "Search Found";
+                    maxIndx = midIndx - 1;
                 }
-                else
-                {
-                    statusStripResponse.Text = "Search Not Found";
-                    ClearTextBoxes();
+                else { // -1 // search term is bigger than found
+                    minIndx = midIndx + 1;
                 }
+            }
+            if (flag) // if flag == true
+            {
+                statusStripResponse.Text = capitalText + " Found at Index: " + midIndx;
+                TextBoxName.Text = definitionsArray[midIndx, 0];
+                TextBoxCategory.Text = definitionsArray[midIndx, 1];
+                TextBoxStructure.Text = definitionsArray[midIndx, 2];
+                TextBoxDefinition.Text = definitionsArray[midIndx, 3];
+
+                ListViewDisplay.SelectedItems.Clear();
+                ListViewDisplay.Items[midIndx].Selected = true;
+                ListViewDisplay.Select();
             }
             else
             {
-                statusStripResponse.Text = "Please Enter Data Into The Name Textbox";
+                statusStripResponse.Text = "Search Not Found";
             }
         }
 
@@ -174,132 +171,102 @@ namespace Definitions_Wiki
         #region AddEditDelete
 
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
-        // Broken. Fix
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            // counter = 0
-            // is array row empty? yes - add text, no - check next line
-            // if loop through entire thing with no empty line, display error 
+            // checks if inputs are all filled
+            if (!string.IsNullOrEmpty(TextBoxName.Text) && !string.IsNullOrEmpty(TextBoxCategory.Text) && !string.IsNullOrEmpty(TextBoxStructure.Text) && !string.IsNullOrEmpty(TextBoxDefinition.Text)) {
+                int counter = 0;
+                // loops through all rows
+                while (counter < rowSize) {
+                    // if finds one thats empty (has ~ symbol)
+                    if (definitionsArray[counter, 0] == "~") {
 
-            if (!string.IsNullOrEmpty(TextBoxName.Text) && !string.IsNullOrEmpty(TextBoxCategory.Text) && !string.IsNullOrEmpty(TextBoxStructure.Text) && !string.IsNullOrEmpty(TextBoxDefinition.Text)) // if none of the boxes are empty
-            {
-                for (int counter = 0; counter < rowSize; counter++) // loop through all lines
-                {
-                    if (definitionsArray[counter, 0] == "") // if empty
-                    {
-                        definitionsArray[counter, 0] = TextBoxName.Text;
-                        definitionsArray[counter, 1] = TextBoxCategory.Text;
-                        definitionsArray[counter, 2] = TextBoxStructure.Text;
+                        definitionsArray[counter, 0] = myTI.ToTitleCase(TextBoxName.Text);
+                        definitionsArray[counter, 1] = myTI.ToTitleCase(TextBoxCategory.Text);
+                        definitionsArray[counter, 2] = myTI.ToTitleCase(TextBoxStructure.Text);
                         definitionsArray[counter, 3] = TextBoxDefinition.Text;
 
                         statusStripResponse.Text = "Successfully Added";
+
+                        // only need to redisplay if an entry is added
                         ClearTextBoxes();
-                        DisplayArray();
                         Sort();
+                        DisplayArray();
+                        break;
                     }
-                    else if (counter >= 12) // says at end of for loop anyway 
-                    {
-                        statusStripResponse.Text = "Array is Full. Please Delete or Edit an Entry to Change Content.";
+                    else { // if the row was full already, adds 1 to counter. while loop continues up to 12
+                        counter++;
+                        // this is here so error wont display as soon as you enter the 12th entry
+                        if (definitionsArray[rowSize - 1, 0] != "~")
+                        {
+                            statusStripResponse.Text = "Array is Full. Please Delete or Edit an Entry to Change Content.";
+                        }
                     }
-                    /*
-                    else if(counter >= 12) { // THIS DOES NOT WORK
-                        statusStripResponse.Text = "Array is Full. Please Delete or Edit an Entry to Change Content.";
-                    }*/
                 }
             }
-            else
-            {
-                statusStripResponse.Text = "Please Enter Data Into All Text Fields Before Adding"; // works
-            }
-            /*
-                if (!string.IsNullOrEmpty(TextBoxName.Text) && !string.IsNullOrEmpty(TextBoxCategory.Text) && !string.IsNullOrEmpty(TextBoxStructure.Text) && !string.IsNullOrEmpty(TextBoxDefinition.Text)) // if none of the boxes are empty
-            {
-                definitionsArray[ptr, 0] = TextBoxName.Text;
-                definitionsArray[ptr, 1] = TextBoxCategory.Text;
-                definitionsArray[ptr, 2] = TextBoxStructure.Text;
-                definitionsArray[ptr, 3] = TextBoxDefinition.Text;
-
-                ptr++;
-
-                ClearTextBoxes();
-                DisplayArray();
-                Sort();
-            }
-            else
-            {
+            else {
                 statusStripResponse.Text = "Please Enter Data Into All Text Fields Before Adding";
             }
 
-            /*
-                if (counter < rowSize)
-                {
-                    if (!string.IsNullOrEmpty(TextBoxName.Text) && !string.IsNullOrEmpty(TextBoxCategory.Text) && !string.IsNullOrEmpty(TextBoxStructure.Text) && !string.IsNullOrEmpty(TextBoxDefinition.Text)) // if none of the boxes are empty
-                    {
-                        // ptr is at 12 so out of range no matter how many you delete
-                        definitionsArray[ptr, 0] = TextBoxName.Text;
-                        definitionsArray[ptr, 1] = TextBoxCategory.Text;
-                        definitionsArray[ptr, 2] = TextBoxStructure.Text;
-                        definitionsArray[ptr, 3] = TextBoxDefinition.Text;
-
-                        counter++;
-
-                        ClearTextBoxes();
-                        DisplayArray();
-                        Sort();
-                    }
-                    else
-                    {
-                        statusStripResponse.Text = "Please Enter Data Into All Text Fields Before Adding";
-                    }
-                }
-                else
-                {
-                    statusStripResponse.Text = "Array is Full. Please Delete or Edit an Entry to Change Content.";
-                }
-            */
-
+            // need statusstripresponse for if array is full :/
         }
 
         // 9.3  Create an EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
         // on edit, clear boxes and focus cursor on name box
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
-            int currentIndex = ListViewDisplay.SelectedIndices[0];
-            if (currentIndex > -1)
+            try
             {
-                definitionsArray[currentIndex, 0] = TextBoxName.Text;
-                definitionsArray[currentIndex, 1] = TextBoxCategory.Text;
-                definitionsArray[currentIndex, 2] = TextBoxStructure.Text;
-                definitionsArray[currentIndex, 3] = TextBoxDefinition.Text;
+                int currentIndex = ListViewDisplay.SelectedIndices[0]; // get current index from mouse click
+                if (currentIndex > -1) // if valid, change values to those in boxes and display
+                {
+                    definitionsArray[currentIndex, 0] = myTI.ToTitleCase(TextBoxName.Text);
+                    definitionsArray[currentIndex, 1] = myTI.ToTitleCase(TextBoxCategory.Text);
+                    definitionsArray[currentIndex, 2] = myTI.ToTitleCase(TextBoxStructure.Text);
+                    definitionsArray[currentIndex, 3] = TextBoxDefinition.Text;
+                }
+                Sort();
+                DisplayArray();
             }
-
-            Sort();
-            DisplayArray();
+            catch
+            {
+                statusStripResponse.Text = "Please Select An Entry To Edit";
+            }
+            
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_Click(object sender, EventArgs e)
         {
-            int currentIndex = ListViewDisplay.SelectedIndices[0];
-            if (currentIndex > -1)
+            try
             {
-                string message = "Are You Sure You Want This Delete This Entry?\nThis Action Is Permanent.";
-                string title = "Delete Definition";
-                MessageBoxButtons buttons = MessageBoxButtons.OKCancel;
-                DialogResult result;
-
-                result = MessageBox.Show(message, title, buttons, MessageBoxIcon.Warning);
-                if (result == DialogResult.OK)
+                int currentIndex = ListViewDisplay.SelectedIndices[0];
+                if (currentIndex > -1)
                 {
-                    definitionsArray[currentIndex, 0] = "";
-                    definitionsArray[currentIndex, 1] = "";
-                    definitionsArray[currentIndex, 2] = "";
-                    definitionsArray[currentIndex, 3] = "";
+                    // confirmation box settings
+                    string message = "Are You Sure You Want This Delete This Entry?\nThis Action Is Permanent.";
+                    string title = "Delete Definition";
+                    MessageBoxButtons buttons = MessageBoxButtons.OKCancel;
+                    DialogResult result;
+                    result = MessageBox.Show(message, title, buttons, MessageBoxIcon.Warning);
 
-                    ClearTextBoxes();
-                    Sort();
-                    DisplayArray();
+                    // if ok, clear those indicies of the array and redisplay
+                    if (result == DialogResult.OK)
+                    {
+                        definitionsArray[currentIndex, 0] = "~";
+                        definitionsArray[currentIndex, 1] = "~";
+                        definitionsArray[currentIndex, 2] = "~";
+                        definitionsArray[currentIndex, 3] = "~";
+
+                        ClearTextBoxes();
+                        Sort();
+                        DisplayArray();
+                    }
                 }
+            }
+            catch
+            {
+                statusStripResponse.Text = "Please Select An Entry To Delete";
             }
         }
 
@@ -327,9 +294,9 @@ namespace Definitions_Wiki
 
         // 9.10	Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is sorted by Name,
         // ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file.
-
         private void ButtonSave_Click(object sender, EventArgs e)
         {
+            // save dialog settings
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "dat files (*.dat) | *.dat";
             saveFileDialog.Title = "Save Dictionary";
@@ -337,15 +304,16 @@ namespace Definitions_Wiki
             saveFileDialog.DefaultExt = "dat";
             saveFileDialog.ShowDialog();
             string fileName = saveFileDialog.FileName;
-            if(saveFileDialog.FileName != "") 
+            if(saveFileDialog.FileName != "") // if file name not empty
             {
-                // save as that
+                // save
                 SaveRecord(fileName);
+                statusStripResponse.Text = "File Saved";
             }
             else
-            {
-                // use default name
-                SaveRecord("definitions.dat"); // does save but clicking save wont close the viewer which is required for it to save
+            {   
+                // must have a user entered filename to save and will display status when cancel or x button is hit
+                statusStripResponse.Text = "File Not Saved";
             }
         }
 
@@ -357,6 +325,7 @@ namespace Definitions_Wiki
                 {
                     using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
                     {
+                        // loop through array and write to file
                         for(int x = 0; x < rowSize; x++)
                         {
                             for(int y = 0; y < columnSize; y++)
@@ -366,7 +335,6 @@ namespace Definitions_Wiki
                         }
                     }
                 }
-                
             }
             catch(IOException ex)
             {
@@ -376,9 +344,9 @@ namespace Definitions_Wiki
 
         // 9.11	Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array,
         // ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task.
-
         private void ButtonLoad_Click(object sender, EventArgs e)
         {
+            // open file dialog settings
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Application.StartupPath;
             openFileDialog.Filter = "dat files (*.dat)| *.dat";
@@ -386,10 +354,9 @@ namespace Definitions_Wiki
 
             if(openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                // open file
+                // open file and display
                 OpenRecord(openFileDialog.FileName);
             }
-            // else
         }
 
         private void OpenRecord(string openFileName)
@@ -398,6 +365,7 @@ namespace Definitions_Wiki
             {
                 using (var stream = File.Open(openFileName, FileMode.Open))
                 {
+                    // loop through file and write into array
                     using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                     {
                         ptr = 0;
@@ -413,11 +381,9 @@ namespace Definitions_Wiki
                     }
                 }
             }
-
             DisplayArray();
         }
 
         #endregion
-
     }
 }
